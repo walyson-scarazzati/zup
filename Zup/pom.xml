@@ -9,8 +9,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>zup</name>
-	<description>Projeto da Zup</description>
+	<name>Pessoa API</name>
+	<description>Projeto de cadastro de pessoas</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

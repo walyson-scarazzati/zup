@@ -27,6 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("pessoas")
+@RequiredArgsConstructor
+@Api(description = "Endpoint para criar, atualizar, deletar, excluir e buscar as Pessoas.", tags = {"Pessoa API"})
 @Slf4j
 public class PessoaController {
 	
