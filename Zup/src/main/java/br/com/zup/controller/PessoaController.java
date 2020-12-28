@@ -58,11 +58,11 @@ public class PessoaController {
 		return pessoaService.salvar(pessoa);
 	}
 
-	@ApiOperation("Atualizar uma pessoa")
+	@ApiOperation("Editar uma pessoa")
 	@PutMapping("/{id}")
 	public Pessoa editar(@PathVariable(value = "id") Long id, @Valid @RequestBody Pessoa dto) {
 
-		log.info("Atualizar cadastro uma pessoa por id: {}", id);
+		log.info("Editar cadastro uma pessoa por id: {}", id);
 		return pessoaService.buscarPorId(id).map(pessoa -> {
 			pessoa.setNome(dto.getNome());
 			pessoa.setEmail(dto.getEmail());
