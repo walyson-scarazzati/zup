@@ -22,7 +22,7 @@ public class SpringJpaConfig {
     public DataSource dataSource() {
         DriverManagerDataSource ds = new DriverManagerDataSource();
         ds.setDriverClassName("com.mysql.jdbc.Driver");
-        ds.setUrl("jdbc:mysql://localhost:3306/zup?useSSL=false&createDatabaseIfNotExist=true");
+        ds.setUrl("jdbc:mysql://localhost:3306/zup?useSSL=false&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true");
         ds.setUsername("root");
         ds.setPassword("123456");
         return ds;
@@ -52,6 +52,7 @@ public class SpringJpaConfig {
         props.setProperty("hibernate.show_sql", "false");
         props.setProperty("hibernate.format_sql", "false");
         props.setProperty("hibernate.hbm2ddl.auto", "update");
+        props.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         return props;
     }
     

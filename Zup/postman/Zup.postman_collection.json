@@ -1,0 +1,87 @@
+{
+	"info": {
+		"_postman_id": "880bfd84-f185-477b-a5e7-fece605ce924",
+		"name": "Zup",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/pessoas/listar",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/pessoas/listar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pessoas",
+						"listar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pessoas/salvar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nome\": \"zup\",\r\n    \"email\": \"zup@gmail.com\",\r\n    \"cpf\": \"806.037.340-49\",\r\n    \"dataNascimento\": \"2005-11-07\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/pessoas/salvar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pessoas",
+						"salvar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pessoas/deletar",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/pessoas/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pessoas",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
