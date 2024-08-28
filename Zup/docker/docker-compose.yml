@@ -1,11 +1,43 @@
 version: "3.7"
 services:
   mysqldb:
-    container_name: mysqldb8
+    container_name: mysqldb8zup
     image: "mysql:8.0"
     restart: always
     ports:
-      - 3306:3306
+      - "3306:3306"
     environment:
       MYSQL_DATABASE: zup
       MYSQL_ROOT_PASSWORD: 123456
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 10s
+      retries: 5
+    networks:
+      - mynetwork
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  zup-app:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    container_name: zup-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/zup
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123456
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+      driver: bridge
+
+volumes:
+  mysql-data:

@@ -7,7 +7,6 @@
 	<groupId>br.com</groupId>
 	<artifactId>zup</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
 
 	<name>Pessoa API</name>
 	<description>Projeto de cadastro de pessoas</description>
@@ -49,6 +48,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.30</version> 
 		</dependency>
 
 		<dependency>
