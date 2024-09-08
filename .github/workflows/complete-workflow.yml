@@ -49,9 +49,9 @@ jobs:
         uses: snyk/actions/maven@v2
         with:
           args: test
-        working-directory: zup/Zup
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        working-directory: zup/Zup
 
   zap_scan:
     runs-on: ubuntu-latest
