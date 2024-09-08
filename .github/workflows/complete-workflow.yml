@@ -33,8 +33,9 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build and Test with Maven
-        run: mvn -B clean verify sonar:sonar
-        working-directory: zup/Zup
+        run: |
+          cd zup/Zup
+          mvn -B clean verify sonar:sonar
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -46,12 +47,11 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/maven@v2
-        with:
-          args: test
+        run: |
+          cd zup/Zup
+          snyk test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        working-directory: zup/Zup
 
   zap_scan:
     runs-on: ubuntu-latest
@@ -61,13 +61,11 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.10.0
-        with:
-          docker_name: 'owasp/zap2docker-stable'
-          target: 'http://localhost:8080'  # Adjust this to match your application URL
-          rules_file_name: '.zap/rules.tsv'
-          cmd_options: '-a'
-        working-directory: zup/Zup
+        run: |
+          cd zup/Zup
+          zap-baseline.py -t http://localhost:8080 -r zap_report.html
+        env:
+          ZAP_TOKEN: ${{ secrets.ZAP_TOKEN }}
 
       - name: Stop Spring Boot applications
         run: |
