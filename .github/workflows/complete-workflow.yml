@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: List files
+      - name: List files at root
         run: ls -R
 
       - name: Set up JDK 17
@@ -34,7 +34,9 @@ jobs:
 
       - name: Build and Test with Maven
         run: |
+          echo "Changing directory to zup/Zup"
           cd zup/Zup
+          ls -R
           mvn -B clean verify sonar:sonar
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -46,9 +48,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: List files at root
+        run: ls -R
+
       - name: Run Snyk to check for vulnerabilities
         run: |
+          echo "Changing directory to zup/Zup"
           cd zup/Zup
+          ls -R
           snyk test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -60,9 +67,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: List files at root
+        run: ls -R
+
       - name: ZAP Scan
         run: |
+          echo "Changing directory to zup/Zup"
           cd zup/Zup
+          ls -R
           zap-baseline.py -t http://localhost:8080 -r zap_report.html
         env:
           ZAP_TOKEN: ${{ secrets.ZAP_TOKEN }}
