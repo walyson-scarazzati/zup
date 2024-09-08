@@ -32,19 +32,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Check directory structure
-        run: |
-          echo "Listing files at root:"
-          ls -R
-          echo "Listing files in zup:"
-          ls -R zup
-          echo "Listing files in zup/Zup:"
-          ls -R zup/Zup
-
       - name: Build and Test with Maven
         run: |
-          echo "Changing directory to zup/Zup"
-          cd zup/Zup
+          echo "Changing directory to Zup"
+          cd Zup
           mvn -B clean verify sonar:sonar
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -60,15 +51,13 @@ jobs:
         run: |
           echo "Listing files at root:"
           ls -R
-          echo "Listing files in zup:"
-          ls -R zup
-          echo "Listing files in zup/Zup:"
-          ls -R zup/Zup
+          echo "Listing files in Zup:"
+          ls -R Zup
 
       - name: Run Snyk to check for vulnerabilities
         run: |
-          echo "Changing directory to zup/Zup"
-          cd zup/Zup
+          echo "Changing directory to Zup"
+          cd Zup
           snyk test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -84,15 +73,13 @@ jobs:
         run: |
           echo "Listing files at root:"
           ls -R
-          echo "Listing files in zup:"
-          ls -R zup
-          echo "Listing files in zup/Zup:"
-          ls -R zup/Zup
+          echo "Listing files in Zup:"
+          ls -R Zup
 
       - name: ZAP Scan
         run: |
-          echo "Changing directory to zup/Zup"
-          cd zup/Zup
+          echo "Changing directory to Zup "
+          cd Zup
           zap-baseline.py -t http://localhost:8080 -r zap_report.html
         env:
           ZAP_TOKEN: ${{ secrets.ZAP_TOKEN }}
