@@ -32,10 +32,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Navigate to project directory
-        run: cd zup/Zup  # Adjust this path if necessary
-
       - name: Build and Test with Maven
+        working-directory: zup/Zup  # Set the working directory
         run: mvn -B clean verify sonar:sonar
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -47,10 +45,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Navigate to project directory
-        run: cd zup/Zup  # Adjust this path if necessary
-
       - name: Run Snyk to check for vulnerabilities
+        working-directory: zup/Zup  # Set the working directory
         uses: snyk/actions/maven@v2
         with:
           args: test
@@ -64,11 +60,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Navigate to project directory
-        run: cd zup/Zup  # Adjust this path if necessary
-
-
       - name: ZAP Scan
+        working-directory: zup/Zup  # Set the working directory
         uses: zaproxy/action-baseline@v0.10.0
         with:
           docker_name: 'owasp/zap2docker-stable'
