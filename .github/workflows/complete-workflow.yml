@@ -13,6 +13,10 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
         cache: maven
+
+    - name: Navigate to project directory
+      run: cd zup/Zup
+
     - name: Build with Maven cloud
       run:  mvn -B verify sonar:sonar -Dsonar.projectKey=zup -Dsonar.organization=walyson-scarazzati -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN
       env:
