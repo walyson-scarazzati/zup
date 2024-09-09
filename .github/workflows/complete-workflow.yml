@@ -5,7 +5,7 @@ on:
   #Trigger the workflow on push from the main branch
   push:
     branches:
-      - main
+      - master
 jobs:
   #Test's job
   tests:
@@ -118,3 +118,30 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: artifact
+   security:
+    runs-on: ubuntu-latest
+    needs: build
+    name: Run the SCA scan on the source code
+    steps:
+      - uses: actions/checkout@master
+      - name: RunSnyk to check for vulnerabilities
+        uses: snyk/actions/maven@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  zap_scan:
+    runs-on: ubuntu-latest
+    needs: security
+    name: Run DAST scan on the web application
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: ZAP Scan
+        uses: zaproxy/action-baseline@v0.6.1
+        with:
+          docker_name: 'owasp/zap2docker-stable'
+          target: 'http://testphp.vulnweb.com/'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
