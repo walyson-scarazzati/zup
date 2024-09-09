@@ -93,7 +93,7 @@ jobs:
           SPRING_PROFILES_ACTIVE: docker
 
       - name: Wait for application to start
-        run: sleep 60 # Increased wait time
+        run: sleep 60 # Increased wait time 
 
       - name: Verify application is running
         run: curl -I http://localhost:8080 || exit 1
