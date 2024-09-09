@@ -72,7 +72,7 @@ jobs:
 
      - name: Run Tests in Maven Build Container
        run: |
-        docker-compose -f Zup/docker/docker-compose.yml run --rm build mvn test
+        docker-compose -f Zup/docker/docker-compose.yml run --rm zup-app mvn test
        env:
         DOCKER_BUILDKIT: 1
 
