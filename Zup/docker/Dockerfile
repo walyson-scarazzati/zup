@@ -1,6 +1,5 @@
 # Use an official Maven image with OpenJDK 17 as a parent image
-FROM maven:3.8.5-openjdk-17  AS build
-#FROM maven:3.8.5-openjdk-11 AS build
+FROM maven:3.8.5-openjdk-17 AS build
 
 # Set the working directory
 WORKDIR /app
@@ -14,7 +13,6 @@ RUN mvn clean package -DskipTests
 
 # Use an OpenJDK image as the base image for running the application
 FROM openjdk:17-jdk
-#FROM openjdk:11-jre-slim
 
 # Set the working directory
 WORKDIR /app
