@@ -1,3 +1,14 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Run unit tests and SAST scan on the source code 
 name: SonarCloud
 
 on:
@@ -24,28 +35,18 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  security:
+ security:
     runs-on: ubuntu-latest
     needs: build
     name: Run the SCA scan on the source code
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install Snyk CLI
-        run: npm install -g snyk
-
-      - name: Check directory structure
-        run: |
-          echo "Listing files at root:"
-          ls -R
-          echo "Listing files in Zup:"
-          ls -R Zup
-
       - name: Run Snyk to check for vulnerabilities
-        run: |
-          echo "Changing directory to Zup"
-          cd Zup
-          snyk test
+        working-directory: ./Zup  # Set the working directory
+        uses: snyk/actions/maven@v2
+        with:
+          args: test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
@@ -56,20 +57,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Check directory structure
-        run: |
-          echo "Listing files at root:"
-          ls -R
-          echo "Listing files in Zup:"
-          ls -R Zup
-
       - name: ZAP Scan
-        run: |
-          echo "Changing directory to Zup"
-          cd Zup
-          zap-baseline.py -t http://localhost:8081 -r zap_report.html
-        env:
-          ZAP_TOKEN: ${{ secrets.ZAP_TOKEN }}
+        working-directory: ./Zup  # Set the working directory
+        uses: zaproxy/action-baseline@v0.10.0
+        with:
+          docker_name: 'zaproxy/zap-stable'
+          target: 'http://localhost:8081'  # Adjust this to match your application URL
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
 
       - name: Stop Spring Boot applications
         run: |
