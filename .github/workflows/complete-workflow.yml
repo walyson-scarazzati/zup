@@ -40,7 +40,6 @@ jobs:
         with:
           ref: master
       - name: ZAP Scan
-        working-directory: ./Zup 
         uses: zaproxy/action-baseline@v0.6.1
         with:
           docker_name: 'zaproxy/zap-stable'
