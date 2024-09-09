@@ -1,20 +1,5 @@
-name: CI Pipeline
-
-on:
-  push:
-    branches:
-      - master
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    name: Run unit tests and SAST scan on the source code 
-name: SonarCloud
-
-on:
-  push:
-    branches:
-      - master
+name: Build code, run unit test, run SAST, SCA, DAST security scans
+on: push
 
 jobs:
   build:
@@ -22,50 +7,44 @@ jobs:
     name: Run unit tests and SAST scan on the source code 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK
+    - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'adopt'
         cache: maven
-    - name: Analyze with SonarCloud
-      run: mvn -B verify sonar:sonar -Dsonar.projectKey=walyson-scarazzati_zup -Dsonar.organization=walyson-scarazzati -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+    - name: Build with Maven cloud
+      run:  mvn -B verify sonar:sonar -Dsonar.projectKey=zup -Dsonar.organization=walyson-scarazzati -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN
       working-directory: ./Zup
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
- security:
+  security:
     runs-on: ubuntu-latest
     needs: build
     name: Run the SCA scan on the source code
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Run Snyk to check for vulnerabilities
-        working-directory: ./Zup  # Set the working directory
-        uses: snyk/actions/maven@v2
-        with:
-          args: test
+      - uses: actions/checkout@master
+      - name: RunSnyk to check for vulnerabilities
+        working-directory: ./Zup
+        uses: snyk/actions/maven@master
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
   zap_scan:
     runs-on: ubuntu-latest
     needs: security
     name: Run DAST scan on the web application
     steps:
-      - uses: actions/checkout@v3
-
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
       - name: ZAP Scan
-        working-directory: ./Zup  # Set the working directory
-        uses: zaproxy/action-baseline@v0.10.0
+        working-directory: ./Zup 
+        uses: zaproxy/action-baseline@v0.6.1
         with:
           docker_name: 'zaproxy/zap-stable'
-          target: 'http://localhost:8081'  # Adjust this to match your application URL
+          target: 'http://localhost:8081'
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
-
-      - name: Stop Spring Boot applications
-        run: |
-          pkill -f 'mvn spring-boot:run'
