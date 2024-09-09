@@ -77,7 +77,9 @@ jobs:
           DOCKER_BUILDKIT: 1
          
       - name: Clean up Docker containers
-        run: docker-compose -f Zup/docker/docker-compose.yml down
+        run: |
+          cd Zup/docker
+          docker-compose -f docker-compose.yml down
 
   zap_scan:
     runs-on: ubuntu-latest
