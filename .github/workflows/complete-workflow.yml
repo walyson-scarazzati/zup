@@ -71,7 +71,7 @@ jobs:
           cd Zup/docker
           docker-compose -f docker-compose.yml build
           docker-compose -f docker-compose.yml up -d
-          docker-compose -f docker-compose.yml exec -T zup-app npm test
+          docker-compose -f docker-compose.yml exec -T zup-app mvn test
         env:
           DOCKER_BUILDKIT: 1
 
