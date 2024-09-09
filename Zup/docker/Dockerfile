@@ -1,5 +1,5 @@
-# Use an official Maven image as a parent image
-FROM maven:3.8.6-openjdk-17 AS build
+# Use an official Maven image with OpenJDK 17 as a parent image
+FROM maven:3.8.6-openjdk-17-slim AS build
 
 # Set the working directory
 WORKDIR /app
@@ -12,7 +12,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Use an OpenJDK image as the base image for running the application
-FROM openjdk:17-jdk
+FROM openjdk:17-jdk-slim
 
 # Set the working directory
 WORKDIR /app
@@ -20,5 +20,7 @@ WORKDIR /app
 # Copy the packaged application from the build stage
 COPY --from=build /app/target/zup-0.0.1-SNAPSHOT.jar /app/zup-app.jar
 
+EXPOSE 8080
+
 # Command to run the application
-ENTRYPOINT ["java", "-jar", "/app/zup-app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "/app/zup-app.jar"]
