@@ -44,11 +44,11 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-  docker:
-    runs-on: ubuntu-latest
-    needs: security
-    name: Build, Test, and Push Docker Images
-    steps:
+    docker:
+     runs-on: ubuntu-latest
+     needs: security
+     name: Build, Test, and Push Docker Images
+     steps:
      - name: Checkout code
        uses: actions/checkout@v3
 
@@ -71,16 +71,22 @@ jobs:
         docker-compose -f docker-compose.yml up -d
 
      - name: Run Tests in Maven Build Container
-       run: |
-        docker-compose -f Zup/docker/docker-compose.yml run --rm zup-app mvn test
-       env:
-        DOCKER_BUILDKIT: 1
+      run: |
+       docker-compose -f Zup/docker/docker-compose.yml run --rm zup-app mvn test
+     env:
+      DOCKER_BUILDKIT: 1
 
-     - name: Log in to Docker Hub
-       uses: docker/login-action@v2
-       with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+     - name: Stop Docker Compose Services
+     run: |
+      cd Zup/docker
+      docker-compose -f docker-compose.yml down
+
+   - name: Log in to Docker Hub
+     uses: docker/login-action@v2
+     with:
+      username: ${{ secrets.DOCKER_HUB_USERNAME }}
+      password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
 
   zap_scan:
     runs-on: ubuntu-latest
