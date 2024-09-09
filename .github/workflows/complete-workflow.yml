@@ -28,7 +28,7 @@ jobs:
 
   zap_scan:
     runs-on: ubuntu-latest
-    needs: security
+    needs: build
     name: Run DAST scan on the web application
     steps:
     - name: Checkout code
