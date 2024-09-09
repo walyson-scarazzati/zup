@@ -37,7 +37,7 @@ services:
 
 networks:
   mynetwork:
-    driver: bridge
+      driver: bridge
 
 volumes:
   mysql-data:
