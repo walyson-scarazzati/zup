@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: SonarCloud
 
 on:
   push:
@@ -10,18 +10,67 @@ jobs:
     runs-on: ubuntu-latest
     name: Run unit tests and SAST scan on the source code 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'adopt'
         cache: maven
-    - name: Run Maven build and analyze with SonarCloud
+    - name: Analyze with SonarCloud
       run: mvn -B verify sonar:sonar -Dsonar.projectKey=walyson-scarazzati_zup -Dsonar.organization=walyson-scarazzati -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+      working-directory: ./Zup
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  
+  security:
+    runs-on: ubuntu-latest
+    needs: build
+    name: Run the SCA scan on the source code
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Check directory structure
+        run: |
+          echo "Listing files at root:"
+          ls -R
+          echo "Listing files in Zup:"
+          ls -R Zup
+
+      - name: Run Snyk to check for vulnerabilities
+        run: |
+          echo "Changing directory to Zup"
+          cd Zup
+          snyk test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  zap_scan:
+    runs-on: ubuntu-latest
+    needs: security
+    name: Run DAST scan on the web application
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check directory structure
+        run: |
+          echo "Listing files at root:"
+          ls -R
+          echo "Listing files in Zup:"
+          ls -R Zup
+
+      - name: ZAP Scan
+        run: |
+          echo "Changing directory to Zup"
+          cd Zup
+          zap-baseline.py -t http://localhost:8081 -r zap_report.html
+        env:
+          ZAP_TOKEN: ${{ secrets.ZAP_TOKEN }}
+
+      - name: Stop Spring Boot applications
+        run: |
+          pkill -f 'mvn spring-boot:run'
