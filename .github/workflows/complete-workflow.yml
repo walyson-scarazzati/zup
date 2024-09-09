@@ -1,6 +1,5 @@
 name: SonarCloud
 
-# Trigger the workflow on push to the master branch
 on:
   push:
     branches:
@@ -9,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Run unit tests and SAST scan on the source code 
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK
@@ -30,6 +30,9 @@ jobs:
     name: Run the SCA scan on the source code
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
 
       - name: Check directory structure
         run: |
@@ -62,7 +65,7 @@ jobs:
 
       - name: ZAP Scan
         run: |
-          echo "Changing directory to Zup "
+          echo "Changing directory to Zup"
           cd Zup
           zap-baseline.py -t http://localhost:8081 -r zap_report.html
         env:
