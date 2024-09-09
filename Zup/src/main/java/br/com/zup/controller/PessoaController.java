@@ -20,17 +20,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.zup.domain.Pessoa;
 import br.com.zup.service.IPessoaService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("pessoas")
 @RequiredArgsConstructor
-@Api(description = "Endpoint para criar, atualizar, deletar, excluir e buscar as Pessoas.", tags = {"Pessoa API"})
+//@Api(description = "Endpoint para criar, atualizar, deletar, excluir e buscar as Pessoas.", tags = {"Pessoa API"})
 @Slf4j
 public class PessoaController {
 	
@@ -40,25 +39,23 @@ public class PessoaController {
 	@Autowired
 	private ModelMapper modelMapper;
 	
-	@ApiOperation("Listar pessoas")
-	@ApiResponses(value = {
-		    @ApiResponse(code = 200, message = "Retorna a lista de pessoas"),
-		    @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso"),
-		    @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
-	})
+	@Operation(summary = "Listar pessoas", description = "Retorna a lista de pessoas")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Retorna a lista de pessoas"),
+			@ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+			@ApiResponse(responseCode = "500", description = "Foi gerada uma exceção") })
 	@GetMapping("/listar")
 	public List<Pessoa> listarPessoas() {
 		return pessoaService.listar();
 	}
 
-	@ApiOperation("Cadastrar uma pessoa")
+	@Operation(summary = "Cadastrar uma pessoa", description = "Cria uma nova pessoa")
 	@PostMapping(value = "/salvar")
 	public Pessoa salvar(@Valid @RequestBody Pessoa pessoa) {
 		log.info("Criando uma pessoa por id: {}", pessoa.getId());
 		return pessoaService.salvar(pessoa);
 	}
 
-	@ApiOperation("Editar uma pessoa")
+	@Operation(summary = "Editar uma pessoa", description = "Atualiza uma pessoa existente")
 	@PutMapping("/{id}")
 	public Pessoa editar(@PathVariable(value = "id") Long id, @Valid @RequestBody Pessoa dto) {
 
@@ -73,7 +70,7 @@ public class PessoaController {
 		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 	}
 
-	@ApiOperation("Excluir uma pessoa por id")
+	@Operation(summary = "Excluir uma pessoa", description = "Exclui uma pessoa pelo ID")
 	@DeleteMapping("/{id}")
 	public void excluir(@PathVariable(value = "id") Long id) {
 		log.info("Excluir um pessoa por id: {}", id);
@@ -81,7 +78,7 @@ public class PessoaController {
 		pessoaService.excluir(pessoa);
 	}
 	
-    @ApiOperation("Obter detalhes de uma pessoa pelo id")
+	@Operation(summary = "Obter detalhes de uma pessoa", description = "Retorna os detalhes de uma pessoa pelo ID")
 	@GetMapping("{id}")
     public Pessoa buscarPorId(@PathVariable Long id) {
         log.info("Obter detalhes de uma pessoa pelo id: {}", id);
@@ -91,7 +88,7 @@ public class PessoaController {
                 .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-	@ApiOperation("Buscar usuários por nome")
+	@Operation(summary = "Buscar pessoas por nome", description = "Retorna uma lista de pessoas pelo nome")
 	@GetMapping("/nome/{nome}")
 	public List<Pessoa> buscarPorNome(@RequestParam(value = "nome") String nome) {
 		return pessoaService.buscarPorNome(nome);
