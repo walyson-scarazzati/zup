@@ -15,6 +15,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
+          distribution: 'temurin' # Specify the distribution
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
@@ -34,6 +35,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
+          distribution: 'temurin' # Specify the distribution
       - name: Cache SonarCloud packages
         uses: actions/cache@v2
         with:
@@ -62,6 +64,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
+          distribution: 'temurin' # Specify the distribution
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
