@@ -26,8 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: RunSnyk to check for vulnerabilities
-        working-directory: ./Zup
         uses: snyk/actions/maven@master
+        working-directory: ./Zup
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
