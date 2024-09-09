@@ -1,3 +1,11 @@
+name: SonarCloud
+
+# Trigger the workflow on push to the master branch
+on:
+  push:
+    branches:
+      - master
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,10 +17,9 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
         cache: maven
-    - name: Change directory to where the pom.xml is located
-      run: cd Zup
     - name: Analyze with SonarCloud
       run: mvn -B verify sonar:sonar -Dsonar.projectKey=walyson-scarazzati_zup -Dsonar.organization=walyson-scarazzati -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+      working-directory: ./Zup
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
