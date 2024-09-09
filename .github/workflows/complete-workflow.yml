@@ -44,42 +44,9 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-  zap_scan:
-    runs-on: ubuntu-latest
-    needs: security
-    name: Run DAST scan on the web application
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Start Spring Boot application
-        run: |
-          cd Zup
-          nohup mvn spring-boot:run -Dspring.profiles.active=docker > /dev/null 2>&1 &
-        env:
-          SPRING_PROFILES_ACTIVE: docker
-
-      - name: Wait for application to start
-        run: sleep 60 # Increased wait time
-
-      - name: Verify application is running
-        run: curl -I http://localhost:8081 || exit 1
-
-      - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.10.0
-        with:
-          docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
-          target: 'http://localhost:8081'
-          rules_file_name: '.zap/rules.tsv'
-          cmd_options: '-a'
-
-      - name: Stop Spring Boot application
-        run: |
-          pkill -f 'mvn spring-boot:run'
-
   docker:
     runs-on: ubuntu-latest
-    needs: zap_scan
+    needs: security
     name: Build, Test, and Push Docker Images
     steps:
       - name: Checkout code
@@ -114,7 +81,36 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Push Docker images
+
+  zap_scan:
+    runs-on: ubuntu-latest
+    needs: docker
+    name: Run DAST scan on the web application
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Start Spring Boot application
         run: |
-          cd Zup/docker
-          docker-compose -f docker-compose.yml push
+          cd Zup
+          nohup mvn spring-boot:run -Dspring.profiles.active=docker > /dev/null 2>&1 &
+        env:
+          SPRING_PROFILES_ACTIVE: docker
+
+      - name: Wait for application to start
+        run: sleep 60 # Increased wait time
+
+      - name: Verify application is running
+        run: curl -I http://localhost:8081 || exit 1
+
+      - name: ZAP Scan
+        uses: zaproxy/action-baseline@v0.10.0
+        with:
+          docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
+          target: 'http://localhost:8081'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
+
+      - name: Stop Spring Boot application
+        run: |
+          pkill -f 'mvn spring-boot:run'
