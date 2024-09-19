@@ -2,9 +2,9 @@ package br.com.zup.exception;
 
 public class BusinessException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public BusinessException(String s) {
+    public BusinessException(String s) {
         super(s);
     }
 }

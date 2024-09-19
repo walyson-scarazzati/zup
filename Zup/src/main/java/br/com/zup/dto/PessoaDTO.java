@@ -3,6 +3,7 @@ package br.com.zup.dto;
 import java.util.Date;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,20 +19,20 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PessoaDTO {
-	
-	@NotEmpty
+
+    @NotNull
     private Long id;
-	
-	@NotEmpty
-	private String nome;
-	
-	@NotEmpty
-	private String email;
-	
-	@NotEmpty
-	private String cpf;
-	
-	@NotEmpty
-	private Date dataNascimento;
+
+    @NotEmpty
+    private String nome;
+
+    @NotEmpty
+    private String email;
+
+    @NotEmpty
+    private String cpf;
+
+    @NotNull
+    private Date dataNascimento;
 
 }

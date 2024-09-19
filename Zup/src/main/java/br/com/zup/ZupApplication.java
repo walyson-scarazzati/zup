@@ -24,8 +24,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class ZupApplication {
 
-	public static void main(String[] args) throws Exception {
-		SpringApplication.run(ZupApplication.class, args);
-	}
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(ZupApplication.class, args);
+    }
 
 }

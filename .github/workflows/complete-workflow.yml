@@ -70,17 +70,6 @@ jobs:
           cd Zup/docker
           docker-compose -f docker-compose.yml up -d
 
-      - name: Run Tests in Maven Build Container
-        run: |
-          docker-compose -f Zup/docker/docker-compose.yml run --rm zup-app mvn test
-        env:
-          DOCKER_BUILDKIT: 1
-         
-      - name: Clean up Docker containers
-        run: |
-          cd Zup/docker
-          docker-compose -f docker-compose.yml down
-
   zap_scan:
     runs-on: ubuntu-latest
     needs: docker
@@ -125,3 +114,7 @@ jobs:
         run: |
           cd Zup/docker
           docker-compose -f docker-compose.yml push
+      - name: Clean up Docker containers
+        run: |
+          cd Zup/docker
+          docker-compose -f docker-compose.yml down

@@ -1,3 +1,13 @@
+<h1>Technologies</h1>
+<ul>
+  <li>Spring Boot 2.7.12</li>
+  <li>Spring Openapi</li>
+  <li>MySQL</li>
+  <li>Docker</li>
+  <li>Github Actions with DevSecOps SonarCloud, Snyk and ZAP Scan</li>
+</ul>
+
+
 <h1> Accessing the environment locally</h1>
 
 - Run the command ```docker-compose up -d``` in the docker folder

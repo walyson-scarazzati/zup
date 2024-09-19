@@ -9,6 +9,7 @@ services:
     environment:
       MYSQL_DATABASE: zup
       MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_INIT_COMMAND: "SET GLOBAL sql_mode = '';"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "--silent"]
       interval: 10s
@@ -17,6 +18,7 @@ services:
       - mynetwork
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./path/to/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   zup-app:
     build:
@@ -29,6 +31,7 @@ services:
       mysqldb:
         condition: service_healthy
     environment:
+      SPRING_PROFILES_ACTIVE: docker 
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/zup
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 123456

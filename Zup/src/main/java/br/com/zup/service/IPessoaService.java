@@ -3,19 +3,19 @@ package br.com.zup.service;
 import java.util.List;
 import java.util.Optional;
 
-import br.com.zup.domain.Pessoa;
+import br.com.zup.dto.PessoaDTO;
 
 public interface IPessoaService {
 
-	Pessoa salvar(Pessoa pessoa);
+    PessoaDTO salvar(PessoaDTO pessoa);
 
-	Pessoa editar(Pessoa pessoa);
+    PessoaDTO editar(PessoaDTO pessoa);
 
-	void excluir(Pessoa pessoa);
+    void excluir(PessoaDTO pessoa);
 
-	List<Pessoa> listar();
+    List<PessoaDTO> listar();
 
-	Optional<Pessoa> buscarPorId(Long id);
+    Optional<PessoaDTO> buscarPorId(Long id);
 
-	List<Pessoa> buscarPorNome(String titulo);
+    List<PessoaDTO> buscarPorNome(String titulo);
 }

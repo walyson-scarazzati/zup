@@ -1,44 +1,28 @@
 package br.com.zup.config;
 
-import org.springdoc.core.GroupedOpenApi;
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@EnableSwagger2
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.tags.Tag;
+
 @Configuration
 public class SwaggerConfig {
-	
 
     @Bean
-    public GroupedOpenApi api() {
-        return GroupedOpenApi.builder()
-                .group("default")
-                .pathsToMatch("/**")
-                .build();
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Pessoa API").version("v1").description("Projeto de cadastro de pessoas")
+                        .contact(new Contact().name("Walyson Scarazzati da Silva")
+                                .url("https://github.com/walyson-scarazzati/zup.git")
+                                .email("walyson.scarazzati@gmail.com"))
+                        .license(new License().name("Apache 2.0").url("http://springdoc.com")))
+                .tags(Arrays.asList(new Tag().name("Pessoas").description("Gerencia as pessoas")));
     }
 
-//    @Bean
-//    public Docket docket() {
-//        return new Docket(DocumentationType.SWAGGER_2)
-//                .select()
-//                .apis(RequestHandlerSelectors.basePackage("br.com.zup.controller"))
-//                .paths(PathSelectors.any())
-//                .build()
-//                .apiInfo(apiInfo());
-//    }
-//
-//    private ApiInfo apiInfo() {
-//        return new ApiInfoBuilder()
-//                .title("Pessoa API")
-//                .description("Projeto de cadastro de pessoas")
-//                .version("1.0.0")
-//                .contact(contact())
-//                .build();
-//    }
-
-//    private Contact contact() {
-//        return new Contact("Walyson Scarazzati da Silva",
-//                "https://github.com/walyson-scarazzati/zup.git",
-//                "walsyon.scarazzati@gmail.com");
-//    }
 }
