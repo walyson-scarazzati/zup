@@ -69,8 +69,8 @@ jobs:
           
       - name: Build and Push MySQL Image
         run: |
-          cd Zup/docker
           docker-compose build mysqldb  # Constrói a imagem do MySQL
+          docker tag mysqldb walysonsilva/mysqldb:latest
           docker push walysonsilva/mysqldb:latest  # Faz o push para o Docker Hub
           
       - name: Get version from pom.xml
