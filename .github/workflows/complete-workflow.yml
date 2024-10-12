@@ -70,6 +70,7 @@ jobs:
       - name: Get version from pom.xml
         id: get_version
         run: |
+          cd ./Zup  # Certifique-se de que você está no diretório correto
           TAG=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
           echo "TAG=$TAG" >> $GITHUB_ENV # Define a variável de ambiente TAG
 
