@@ -2,8 +2,8 @@ version: "3.7"
 services:
   mysqldb:
     build:
-     context: .
-     dockerfile: DockerfileMysql
+      context: .
+      dockerfile: DockerfileMysql
     container_name: mysqldb8zup
     image: mysqldb:latest
     restart: always
@@ -29,7 +29,7 @@ services:
       dockerfile: docker/Dockerfile
       args:
        VERSION: ${TAG}
-    image: walysonsilva/zup-app:${TAG}
+    image: walysonsilva/zup-app:${TAG}  # A imagem deve ser referenciada corretamente
     container_name: zup-app
     ports:
       - "8080:8080"
