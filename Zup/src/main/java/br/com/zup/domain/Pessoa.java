@@ -2,6 +2,7 @@ package br.com.zup.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,4 +48,26 @@ public class Pessoa implements Serializable {
     @Column(name = "data_nascimento")
     private Date dataNascimento;
 
+    @Override
+    public int hashCode() {
+        // Use only fields relevant to equality
+        return Objects.hash(id, nome, email, cpf, dataNascimento != null ? dataNascimento.getTime() : 0);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Pessoa that = (Pessoa) obj;
+        return Objects.equals(id, that.id) &&
+               Objects.equals(nome, that.nome) &&
+               Objects.equals(email, that.email) &&
+               Objects.equals(cpf, that.cpf) &&
+               Objects.equals(dataNascimento, that.dataNascimento);
+    }
+
+    @Override
+    public String toString() {
+        return "Pessoa(id=" + id + ", nome=" + nome + ", email=" + email + ", cpf=" + cpf + ", dataNascimento=" + dataNascimento + ")";
+    }
 }

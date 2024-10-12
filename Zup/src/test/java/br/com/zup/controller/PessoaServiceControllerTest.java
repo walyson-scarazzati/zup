@@ -29,8 +29,6 @@ import br.com.zup.dto.PessoaDTO;
 import br.com.zup.service.IPessoaService;
 
 @WebMvcTest(PessoaController.class)
-//@SpringBootTest
-//@AutoConfigureMockMvc
 public class PessoaServiceControllerTest {
 
     @Autowired
@@ -187,8 +185,57 @@ public class PessoaServiceControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
+    @Test
+    void testListarPessoas_WithNoResults_ShouldReturnEmptyList() throws Exception {
+        // Arrange
+        when(pessoaService.listar()).thenReturn(Collections.emptyList());
 
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/pessoas/listar")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty());
+    }
 
+    @Test
+    void testSalvarPessoa_InvalidDTO_ShouldReturnBadRequest() throws Exception {
+        // Arrange
+        PessoaDTO invalidPessoaDTO = new PessoaDTO(); // DTO inválido, sem campos obrigatórios
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/pessoas/salvar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidPessoaDTO)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    void testEditarPessoa_WithInvalidData_ShouldReturnBadRequest() throws Exception {
+        // Arrange
+        PessoaDTO invalidPessoaDTO = new PessoaDTO(); // DTO inválido, sem campos obrigatórios
+        when(pessoaService.buscarPorId(anyLong())).thenReturn(Optional.of(invalidPessoaDTO));
+
+        mockMvc.perform(put("/pessoas/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidPessoaDTO)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    void testExcluirPessoa_WithExistingId_ShouldReturnOk() throws Exception {
+        when(pessoaService.buscarPorId(anyLong())).thenReturn(Optional.of(pessoaDTO));
+
+        mockMvc.perform(delete("/pessoas/{id}", pessoaDTO.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void testBuscarPorId_WithNonExistingId_ShouldReturnNotFound() throws Exception {
+        when(pessoaService.buscarPorId(anyLong())).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/pessoas/{id}", 999L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 
 }

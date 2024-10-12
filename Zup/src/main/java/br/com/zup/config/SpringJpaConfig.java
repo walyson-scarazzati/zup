@@ -33,7 +33,7 @@ public class SpringJpaConfig {
     	return new JpaTransactionManager(entityManagerFactory);
     }
 
-    private Properties jpaProperties() {
+    public Properties jpaProperties() {
         Properties props = new Properties();
         props.setProperty("hibernate.show_sql", "false");
         props.setProperty("hibernate.format_sql", "false");

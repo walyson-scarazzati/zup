@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,7 +20,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MockMvc;
 
+import br.com.zup.controller.PessoaController;
 import br.com.zup.domain.Pessoa;
 import br.com.zup.dto.PessoaDTO;
 import br.com.zup.exception.BusinessException;
@@ -36,6 +40,12 @@ public class PessoaServiceImplTest {
 
     @InjectMocks
     private PessoaServiceImpl pessoaService;
+    
+    @InjectMocks
+    private PessoaController pessoaController;
+    
+    @Autowired
+    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
@@ -197,4 +207,56 @@ public class PessoaServiceImplTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
+    
+    @Test
+    void testSalvarPessoa_WithExistingCpfOrEmail_ShouldThrowBusinessException() {
+        PessoaDTO pessoaDTO = new PessoaDTO();
+        pessoaDTO.setCpf("12345678901");
+        pessoaDTO.setEmail("test@example.com");
+        // Arrange
+        when(pessoaRepository.existsByCpf(anyString())).thenReturn(true);
+
+        // Act & Assert
+        assertThrows(BusinessException.class, () -> pessoaService.salvar(pessoaDTO));
+    }
+
+    @Test
+    void testSalvar_WithExistingEmail_ShouldThrowBusinessException() {
+        // Arrange
+        PessoaDTO pessoaDTO = new PessoaDTO();
+        pessoaDTO.setCpf("12345678901");
+        pessoaDTO.setEmail("test@example.com");
+        
+        when(pessoaRepository.existsByCpf(pessoaDTO.getCpf())).thenReturn(false);
+        when(pessoaRepository.existsByEmail(pessoaDTO.getEmail())).thenReturn(true); // Email já existente
+
+        // Act & Assert
+        BusinessException thrown = assertThrows(BusinessException.class, () -> {
+            pessoaService.salvar(pessoaDTO);
+        });
+        assertEquals("Cpf e/ou email já cadastrado.", thrown.getMessage());
+    }
+
+    @Test
+    void testEditar_WithNullPessoaDTO_ShouldThrowIllegalArgumentException() {
+        // Act & Assert
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
+            pessoaService.editar(null);
+        });
+        assertEquals("Pessoa id não pode ser vazio", thrown.getMessage());
+    }
+
+    @Test
+    void testEditar_WithNullId_ShouldThrowIllegalArgumentException() {
+        // Arrange
+        PessoaDTO pessoaDTO = new PessoaDTO();
+        pessoaDTO.setId(null); // ID nulo
+        
+        // Act & Assert
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
+            pessoaService.editar(pessoaDTO);
+        });
+        assertEquals("Pessoa id não pode ser vazio", thrown.getMessage());
+    }
+
 }
