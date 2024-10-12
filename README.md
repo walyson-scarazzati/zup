@@ -7,7 +7,16 @@
   <li>Github Actions with DevSecOps SonarCloud, Snyk and ZAP Scan</li>
 </ul>
 
+<h1> Accessing project based images from dockerhub </h1>
 
+- 1º step ```docker network create mynetwork```
+- 2º step ```docker run -d --name mysqldb8zup -p 3306:3306 --network mynetwork walysonsilva/mysqldb8zup```
+- 3º step ```docker run -d --name zup-app -p 8080:8080 --network mynetwork walysonsilva/zup-app:0.0.1-SNAPSHOT```
+- 4º step access project: http://localhost:8080/swagger-ui/index.html#/Pessoas/listarPessoas
+
+![image](https://github.com/user-attachments/assets/0c8f9a7b-2478-48bb-927a-911b104f6616)
+
+ 
 <h1> Accessing the environment locally</h1>
 
 - Run the command ```docker-compose up -d``` in the docker folder
