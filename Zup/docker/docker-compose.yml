@@ -1,8 +1,10 @@
 version: "3.7"
 services:
   mysqldb:
+    build:
+     context: .
+     dockerfile: DockerfileMysql
     container_name: mysqldb8zup
-    image: "mysql:8.0"
     restart: always
     ports:
       - "3306:3306"

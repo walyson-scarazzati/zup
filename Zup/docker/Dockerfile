@@ -24,16 +24,10 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y netcat
 
 # Copiar o arquivo JAR da fase de build
-COPY --from=build /app/target/zup-${VERSION}.jar /app/zup-app.jar
-
-# Copiar o script wait-for-it
-COPY docker/wait-for-it.sh /usr/local/bin/wait-for-it
-
-# Dar permissão de execução ao script wait-for-it
-RUN chmod +x /usr/local/bin/wait-for-it
+COPY --from=build /app/target/zup-${VERSION}.jar /app/zup-app.jar 
 
 # Expor a porta da aplicação
 EXPOSE 8080
 
 # Comando de execução (aguardar MySQL antes de iniciar o app)
-ENTRYPOINT ["wait-for-it", "mysqldb:3306", "--", "java", "-Dspring.profiles.active=docker", "-jar", "/app/zup-app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "/app/zup-app.jar"]

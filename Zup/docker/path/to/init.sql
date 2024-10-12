@@ -1,10 +1,20 @@
 -- Criação do banco de dados 'zup' se não existir
 CREATE DATABASE IF NOT EXISTS zup;
-GRANT ALL PRIVILEGES ON zup.* TO 'root'@'%' IDENTIFIED BY '123456';
+
+-- Usar o banco de dados
+USE zup;
+
+-- Alteração de senha para o usuário 'root'
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
+
+-- Concedendo todas as permissões ao usuário
+GRANT ALL PRIVILEGES ON zup.* TO 'root'@'localhost';
+GRANT ALL PRIVILEGES ON zup.* TO 'root'@'%';
+
+-- Aplicando as mudanças
 FLUSH PRIVILEGES;
 
--- Usar o banco de dados 'zup'
-USE zup;
 
 -- Criação da tabela 'pessoas'
 CREATE TABLE IF NOT EXISTS pessoas (

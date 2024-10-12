@@ -1,0 +1,13 @@
+# Use a imagem oficial do MySQL como base
+FROM mysql:8.0
+
+# Defina variáveis de ambiente para o MySQL
+ENV MYSQL_DATABASE=zup
+ENV MYSQL_ROOT_PASSWORD=123456
+ENV MYSQL_INIT_COMMAND="SET GLOBAL sql_mode = '';"
+
+# Copie seu script de inicialização, se necessário
+COPY ./path/to/init.sql /docker-entrypoint-initdb.d/
+
+# Exponha a porta do MySQL
+EXPOSE 3306
