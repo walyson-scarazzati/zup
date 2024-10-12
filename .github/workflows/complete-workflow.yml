@@ -67,10 +67,11 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           
-      - name: Build MySQL Image
+      - name: Build and Push MySQL Image
         run: |
           cd Zup/docker
-          docker-compose build mysqldb
+          docker-compose build mysqldb  # Constrói a imagem do MySQL
+          docker push walysonsilva/mysqldb:latest  # Faz o push para o Docker Hub
           
       - name: Get version from pom.xml
         id: get_version
@@ -79,20 +80,6 @@ jobs:
           TAG=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
           echo "TAG=$TAG" >> $GITHUB_ENV # Define a variável de ambiente TAG
 
-      - name: Build MySQL Image
-        run: |
-         cd Zup/docker
-         docker-compose build mysqldb  # Constrói a imagem do MySQL
-
-      - name: Verify Docker Images
-        run: |
-         docker images  # Verifica se a imagem mysqldb foi construída corretamente
-
-      - name: Tag MySQL Image
-        run: |
-         docker tag zup_mysqldb:latest walysonsilva/mysqldb:latest  # Usa nome em minúsculas
-         docker push walysonsilva/mysqldb:latest  # Faz o push da imagem para o Docker Hub
-      
       - name: Build Zup-App Image
         run: |
          cd Zup/docker
