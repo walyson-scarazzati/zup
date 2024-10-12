@@ -24,7 +24,9 @@ WORKDIR /app
 COPY --from=build /app/target/zup-${VERSION}.jar /app/zup-app.jar
 
 # Copy the wait-for-it script
-COPY wait-for-it.sh /usr/local/bin/wait-for-it
+COPY docker/wait-for-it.sh /usr/local/bin/wait-for-it 
+
+# Make the wait-for-it script executable
 RUN chmod +x /usr/local/bin/wait-for-it
 
 EXPOSE 8080
