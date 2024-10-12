@@ -79,19 +79,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Start Spring Boot application
-        run: |
-          cd Zup
-          nohup mvn spring-boot:run -Dspring.profiles.active=docker > /dev/null 2>&1 &
-        env:
-          SPRING_PROFILES_ACTIVE: docker
-
-      - name: Wait for application to start
-        run: sleep 60 # Increased wait time 
-
-      - name: Verify application is running
-        run: curl -I http://localhost:8080 || exit 1
-
       - name: ZAP Scan
         uses: zaproxy/action-baseline@v0.10.0
         with:
@@ -99,10 +86,6 @@ jobs:
           target: 'http://localhost:8080'
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
-
-      - name: Stop Spring Boot application
-        run: |
-          pkill -f 'mvn spring-boot:run'
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -114,6 +97,7 @@ jobs:
         run: |
           cd Zup/docker
           docker-compose -f docker-compose.yml push
+
       - name: Clean up Docker containers
         run: |
           cd Zup/docker
