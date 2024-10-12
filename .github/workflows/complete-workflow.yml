@@ -70,9 +70,9 @@ jobs:
       - name: Build Docker Images
         run: |
           cd Zup/docker 
-          docker-compose -f docker-compose.yml build
+          docker compose -f docker-compose.yml build
 
       - name: Push Docker Images
         run: |
           cd Zup/docker
-          docker-compose -f docker-compose.yml push
+          docker compose -f docker-compose.yml push
