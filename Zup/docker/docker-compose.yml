@@ -5,6 +5,7 @@ services:
      context: .
      dockerfile: DockerfileMysql
     container_name: mysqldb8zup
+    image: mysqldb:latest
     restart: always
     ports:
       - "3306:3306"
