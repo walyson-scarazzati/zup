@@ -66,11 +66,17 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          
+      - name: Get version from pom.xml
+        id: get_version
+        run: |
+          TAG=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+          echo "TAG=$TAG" >> $GITHUB_ENV # Define a variável de ambiente TAG
 
       - name: Build Docker Images
         run: |
           cd Zup/docker 
-          docker compose -f docker-compose.yml build
+          docker-compose build --build-arg VERSION=${{ env.TAG }}
 
       - name: Push Docker Images
         run: |

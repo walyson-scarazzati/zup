@@ -24,7 +24,9 @@ services:
     build:
       context: ../
       dockerfile: docker/Dockerfile
-    image: walysonsilva/zup-app:latest
+      args:
+       VERSION: ${TAG}
+    image: walysonsilva/zup-app:${TAG}
     container_name: zup-app
     ports:
       - "8080:8080"
