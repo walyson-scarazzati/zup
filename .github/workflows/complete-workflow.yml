@@ -67,11 +67,16 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           
-      - name: Build and Push MySQL Image
+      - name: Build MySQL Image
         run: |
-          docker pull mysql:8.0  # Baixar a imagem do MySQL e empurrar para o Docker Hub
-          docker tag mysql:8.0 walysonsilva/mysqldb:latest
+          cd Zup/docker
+          docker-compose build mysqldb
+
+      - name: Push MySQL Image
+        run: |
+          docker tag walysonsilva/mysqldb:latest
           docker push walysonsilva/mysqldb:latest
+          
           
       - name: Get version from pom.xml
         id: get_version
