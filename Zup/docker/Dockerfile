@@ -47,7 +47,7 @@ ENV MYSQL_DATABASE=zup
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy init SQL script for MySQL
-COPY docker/init.sql /docker-entrypoint-initdb.d/
+COPY docker/path/to/init.sql /docker-entrypoint-initdb.d/
 
 # Expose ports for MySQL and the application
 EXPOSE 3306 8080
