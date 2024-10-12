@@ -79,22 +79,22 @@ jobs:
           TAG=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
           echo "TAG=$TAG" >> $GITHUB_ENV # Define a variável de ambiente TAG
 
-      - name: Build Docker Images
+      - name: Build MySQL Image
         run: |
-          cd Zup/docker 
-          docker-compose build --build-arg VERSION=${{ env.TAG }}
-          
-      - name: Run Docker Compose
-        run: |
-          cd Zup/docker
-          docker-compose up -d 
+         cd Zup/docker
+         docker-compose build mysqldb  # Build the MySQL image
 
       - name: Push MySQL Image
         run: |
+         docker tag mysqldb:latest walysonsilva/mysqldb:latest  # Tagging the image explicitly
+         docker push walysonsilva/mysqldb:latest  # Push to Docker Hub
+
+      - name: Build Zup-App Image
+        run: |
          cd Zup/docker
-         docker-compose push mysqldb  # Push the MySQL image
+         docker-compose build --build-arg VERSION=${{ env.TAG }}
 
       - name: Push Zup-App Image
         run: |
-         cd Zup/docker
-         docker-compose push zup-app  # Push the zup-app image
+         docker tag zup-app:${{ env.TAG }} walysonsilva/zup-app:${{ env.TAG }}  # Tagging the Zup app image
+         docker push walysonsilva/zup-app:${{ env.TAG }}  # Push to Docker Hub
