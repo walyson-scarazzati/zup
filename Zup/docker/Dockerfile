@@ -20,6 +20,9 @@ ARG VERSION
 # Set the working directory
 WORKDIR /app
 
+# Install netcat for wait-for-it script
+RUN apt-get update && apt-get install -y netcat
+
 # Copy the packaged application from the build stage
 COPY --from=build /app/target/zup-${VERSION}.jar /app/zup-app.jar
 
