@@ -71,12 +71,6 @@ jobs:
         run: |
           cd Zup/docker
           docker-compose build mysqldb
-
-      - name: Push MySQL Image
-        run: |
-          docker tag walysonsilva/mysqldb:latest
-          docker push walysonsilva/mysqldb:latest
-          
           
       - name: Get version from pom.xml
         id: get_version
@@ -89,6 +83,11 @@ jobs:
         run: |
           cd Zup/docker 
           docker-compose build --build-arg VERSION=${{ env.TAG }}
+          
+      - name: Run Docker Compose
+        run: |
+          cd Zup/docker
+          docker-compose up -d 
 
       - name: Push Docker Images
         run: |
