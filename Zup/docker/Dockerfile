@@ -1,4 +1,4 @@
-# Use an official Maven image with OpenJDK 17 as a parent image
+# Stage 1: Use an official Maven image with OpenJDK 17 to build the Java application
 FROM maven:3.8.5-openjdk-17 AS build
 
 # Set the working directory
@@ -8,11 +8,24 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-# Package your application
+# Package your application without running tests
 RUN mvn clean package -DskipTests
 
-# Use an OpenJDK image as the base image for running the application
+# Stage 2: Use an OpenJDK image to run the application
 FROM openjdk:17-jdk
+
+# Install MySQL server
+RUN apt-get update && \
+    apt-get install -y mysql-server && \
+    apt-get clean
+
+# Install Supervisord to manage multiple services
+RUN apt-get update && \
+    apt-get install -y supervisor && \
+    apt-get clean
+
+# Create the directory for supervisor configuration
+RUN mkdir -p /var/log/supervisor
 
 # Declare the build argument
 ARG VERSION
@@ -20,19 +33,24 @@ ARG VERSION
 # Set the working directory
 WORKDIR /app
 
-# Install netcat for wait-for-it script (use apt-get for Debian-based images)
+# Install netcat for the wait-for-it script (using apt-get for Debian-based images)
 RUN apt-get update && apt-get install -y netcat
 
 # Copy the packaged application from the build stage
 COPY --from=build /app/target/zup-${VERSION}.jar /app/zup-app.jar
 
-# Copy the wait-for-it script
-COPY docker/wait-for-it.sh /usr/local/bin/wait-for-it 
+# Configure MySQL (set root password and database creation)
+ENV MYSQL_ROOT_PASSWORD=123456
+ENV MYSQL_DATABASE=zup
 
-# Make the wait-for-it script executable
-RUN chmod +x /usr/local/bin/wait-for-it
+# Create a supervisord configuration file to manage both MySQL and the application
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-EXPOSE 8080
+# Copy init SQL script for MySQL
+COPY docker/init.sql /docker-entrypoint-initdb.d/
 
-# Command to run the application
-ENTRYPOINT ["wait-for-it", "mysqldb:3306", "--", "java", "-Dspring.profiles.active=docker", "-jar", "/app/zup-app.jar"]
+# Expose ports for MySQL and the application
+EXPOSE 3306 8080
+
+# Command to run the application, waiting for MySQL service to be ready
+ENTRYPOINT ["/usr/bin/supervisord", "mysqldb:3306", "--", "java", "-Dspring.profiles.active=docker", "-jar", "/app/zup-app.jar"]
