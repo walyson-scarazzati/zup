@@ -23,7 +23,11 @@ WORKDIR /app
 # Copy the packaged application from the build stage
 COPY --from=build /app/target/zup-${VERSION}.jar /app/zup-app.jar
 
+# Copy the wait-for-it script
+COPY wait-for-it.sh /usr/local/bin/wait-for-it
+RUN chmod +x /usr/local/bin/wait-for-it
+
 EXPOSE 8080
 
 # Command to run the application
-ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "/app/zup-app.jar"]
+ENTRYPOINT ["wait-for-it", "mysqldb:3306", "--", "java", "-Dspring.profiles.active=docker", "-jar", "/app/zup-app.jar"]
