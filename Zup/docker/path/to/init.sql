@@ -1,5 +1,7 @@
 -- Criação do banco de dados 'zup' se não existir
 CREATE DATABASE IF NOT EXISTS zup;
+GRANT ALL PRIVILEGES ON zup.* TO 'root'@'%' IDENTIFIED BY '123456';
+FLUSH PRIVILEGES;
 
 -- Usar o banco de dados 'zup'
 USE zup;
