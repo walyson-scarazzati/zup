@@ -89,7 +89,12 @@ jobs:
           cd Zup/docker
           docker-compose up -d 
 
-      - name: Push Docker Images
+      - name: Push MySQL Image
         run: |
-          cd Zup/docker
-          docker compose -f docker-compose.yml push
+         cd Zup/docker
+         docker-compose push mysqldb  # Push the MySQL image
+
+      - name: Push Zup-App Image
+        run: |
+         cd Zup/docker
+         docker-compose push zup-app  # Push the zup-app image
