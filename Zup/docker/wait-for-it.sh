@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Use this script to wait for a service to be available.
 # Usage: wait-for-it.sh host:port [-t timeout] [--] command args
-# Example: wait-for-it.sh mysqldb:3306 -- java -jar myapp.jar
+# Example: wait-for-it.sh mysqldb8zup:3306 -- java -jar myapp.jar
 
 set -e
 

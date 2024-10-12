@@ -70,8 +70,8 @@ jobs:
       - name: Build MySQL Image
         run: |
           cd Zup/docker
-          docker-compose build mysqldb  # Constrói a imagem do MySQL
-          docker tag mysqldb:latest walysonsilva/mysqldb:latest  # Tagging the MySQL image
+          docker-compose build mysqldb8zup  # Constrói a imagem do MySQL
+          docker tag mysqldb8zup:latest walysonsilva/mysqldb8zup:latest  # Tagging the MySQL image
 
       - name: Get version from pom.xml
         id: get_version
@@ -87,7 +87,7 @@ jobs:
 
       - name: Push MySQL Image
         run: |
-         docker push walysonsilva/mysqldb:latest  # Push para Docker Hub
+         docker push walysonsilva/mysqldb8zup:latest  # Push para Docker Hub
 
       - name: Push Zup-App Image
         run: |

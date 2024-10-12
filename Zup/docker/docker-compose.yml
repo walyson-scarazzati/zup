@@ -1,11 +1,11 @@
 version: "3.7"
 services:
-  mysqldb:
+  mysqldb8zup:
     build:
       context: .
       dockerfile: DockerfileMysql
     container_name: mysqldb8zup
-    image: mysqldb:latest
+    image: mysqldb8zup:latest
     restart: always
     ports:
       - "3306:3306"
@@ -34,11 +34,11 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      mysqldb:
+      mysqldb8zup:
         condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: docker 
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/zup
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb8zup:3306/zup
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 123456
     networks:
