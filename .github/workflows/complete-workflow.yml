@@ -82,12 +82,16 @@ jobs:
       - name: Build MySQL Image
         run: |
          cd Zup/docker
-         docker-compose build mysqldb  # Build the MySQL image
+         docker-compose build mysqldb  # Build a imagem do MySQL
 
-      - name: Push MySQL Image
+      - name: Verify Docker Images
         run: |
-         docker tag mysqldb:latest walysonsilva/mysqldb:latest  # Tagging the image explicitly
-         docker push walysonsilva/mysqldb:latest  # Push to Docker Hub
+         docker images  # Verifique se a imagem mysqldb foi criada corretamente
+
+      - name: Tag MySQL Image
+        run: |
+         docker tag Zup_mysqldb:latest walysonsilva/mysqldb:latest  # Corrija para o nome correto da imagem, se necessário
+         docker push walysonsilva/mysqldb:latest  # Faz o push da imagem para o Docker Hub
 
       - name: Build Zup-App Image
         run: |
