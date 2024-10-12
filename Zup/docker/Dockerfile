@@ -15,13 +15,13 @@ RUN mvn clean package -DskipTests
 FROM openjdk:17-jdk
 
 # Declare the build argument
-ARG TAG
+ARG VERSION
 
 # Set the working directory
 WORKDIR /app
 
 # Copy the packaged application from the build stage
-COPY --from=build /app/target/zup-${TAG}.jar /app/zup-app.jar
+COPY --from=build /app/target/zup-${VERSION}.jar /app/zup-app.jar
 
 EXPOSE 8080
 
