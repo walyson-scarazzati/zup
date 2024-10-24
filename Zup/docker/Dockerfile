@@ -14,8 +14,8 @@ COPY src ./src
 # Fazer o build do projeto
 RUN mvn clean package -DskipTests
 
-# Fase final: imagem leve baseada em OpenJDK Alpine
-FROM openjdk:17-alpine
+# Fase final: imagem com OpenJDK
+FROM openjdk:17-jdk-slim
 
 # Declarar argumento de versão
 ARG VERSION
