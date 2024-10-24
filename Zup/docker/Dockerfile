@@ -1,5 +1,5 @@
 # Fase de build usando Maven
-FROM maven:3.8.5-openjdk-17-slim AS build
+FROM maven:3.8.5-eclipse-temurin-17-alpine  AS build
 
 # Definir diretório de trabalho
 WORKDIR /app
@@ -15,7 +15,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Fase final: imagem com OpenJDK
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre-alpine
 
 # Declarar argumento de versão
 ARG VERSION
