@@ -14,6 +14,12 @@ COPY src ./src
 # Fazer o build do projeto (sem testes para agilizar)
 RUN mvn clean package -DskipTests
 
+# Declarar argumento de versão
+ARG VERSION
+
+# Verificar se o JAR foi gerado corretamente
+RUN ls /app/target/
+
 # Fase final: imagem leve baseada em OpenJDK Alpine
 FROM openjdk:17-alpine
 
