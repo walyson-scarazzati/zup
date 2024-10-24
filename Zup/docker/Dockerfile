@@ -27,7 +27,7 @@ FROM openjdk:17-alpine
 WORKDIR /app
 
 # Instalar netcat sem cache para evitar arquivos desnecessários
-RUN apk add --no-cache netcat-openbsd
+RUN apt-get update && apt-get install -y netcat
 
 # Copiar o arquivo JAR da fase de build
 COPY --from=build /app/target/zup-${VERSION}.jar /app/zup-app.jar
