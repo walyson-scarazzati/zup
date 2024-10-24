@@ -6,13 +6,16 @@ WORKDIR /app
 
 # Copiar arquivos do projeto Maven
 COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copiar o código fonte
 COPY src ./src
 
 # Fazer o build do projeto
 RUN mvn clean package -DskipTests
 
-# Fase final: imagem com OpenJDK
-FROM openjdk:17-jdk-slim
+# Fase final: imagem leve baseada em OpenJDK Alpine
+FROM openjdk:17-alpine
 
 # Declarar argumento de versão
 ARG VERSION
